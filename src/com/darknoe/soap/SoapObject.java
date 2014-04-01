@@ -73,14 +73,7 @@ public class SoapObject {
 		
 		soapCall += "</wsdata:"+this.method+"></soapenv:Body></soapenv:Envelope>";
 		
-		/*
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-        nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
-		UrlRequest.POST(this.webserviceUrl, nameValuePairs);
-		*/
-		
-		Log.e("SoapObject", soapCall);
+		//Log.e("SoapObject", soapCall);
 		
 		HttpPost httppost = new HttpPost(this.webserviceUrl);          
 		StringEntity se = new StringEntity(soapCall,HTTP.UTF_8);
