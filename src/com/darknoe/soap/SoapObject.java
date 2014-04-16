@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
@@ -23,9 +25,17 @@ public class SoapObject {
 	private String method;
 	private String action;
 	private String webserviceUrl;
+	private String namespace;
+	private String username;
+	private String password;
 
 	public SoapObject(){
 		this.properties = new ArrayList<SoapProperty>();
+		this.method = null;
+		this.action = null;
+		this.webserviceUrl = null;
+		this.username = null;
+		this.password = null;
 	}
 	
 	public void addProperty(SoapProperty property){
@@ -59,27 +69,40 @@ public class SoapObject {
 	public void setWebserviceUrl(String webserviceUrl) {
 		this.webserviceUrl = webserviceUrl;
 	}
-
+	
+	public void setAuthentication(String username, String password){
+		this.username = username;
+		this.password = password;
+	}
+	
+	public boolean isAuthenticated(){
+		return (username!=null && password!=null);
+	}
+		
 	public String call() throws ClientProtocolException, IOException{
 		String xml = null;
 		String soapCall;
 		
-		soapCall = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:wsdata=\"http://acigrup.com/\"><soapenv:Header><wsdata:AutHeader><wsdata:Username>user</wsdata:Username><wsdata:Password></wsdata:Password>pass</wsdata:AutHeader></soapenv:Header><soapenv:Body>";
-		soapCall += "<wsdata:"+this.method+">";
+		soapCall = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\""+this.namespace+"\">";
+		if (isAuthenticated()) soapCall += "<soapenv:Header>soapenv:AutHeader><soapenv:Username>user</soapenv:Username><soapenv:Password>pass</soapenv:Password></soapenv:AutHeader></soapenv:Header>";
+		else soapCall += "<soapenv:Header/>";
+		soapCall += "<soapenv:Body>";
+		soapCall += "<tem:"+this.method+">";
 		
 		for(int i=0; i<this.properties.size(); i++){
-			soapCall += "<wsdata:"+this.properties.get(i).getAttributeName()+">"+this.properties.get(i).getAttributeValue()+"</wsdata:"+this.properties.get(i).getAttributeName()+">";
+			soapCall += "<tem:"+this.properties.get(i).getAttributeName()+">"+this.properties.get(i).getAttributeValue()+"</tem:"+this.properties.get(i).getAttributeName()+">";
 		}
 		
-		soapCall += "</wsdata:"+this.method+"></soapenv:Body></soapenv:Envelope>";
+		soapCall += "</tem:"+this.method+"></soapenv:Body></soapenv:Envelope>";
 		
-		//Log.e("SoapObject", soapCall);
+		Log.e("SoapObject", soapCall);
 		
 		HttpPost httppost = new HttpPost(this.webserviceUrl);          
 		StringEntity se = new StringEntity(soapCall,HTTP.UTF_8);
 
-		se.setContentType("text/xml");  
+		se.setContentType("text/xml");
 		httppost.setHeader("Content-Type","text/xml; charset=utf-8");
+		httppost.setHeader("SOAPAction",this.action);
 		httppost.setEntity(se);  
 
 		HttpClient httpclient = new DefaultHttpClient();
@@ -103,4 +126,13 @@ public class SoapObject {
 		
 		return xml;
 	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+	
 }
