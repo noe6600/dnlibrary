@@ -1,2 +1,10 @@
 
 dnlibrary/
+
+*.class
+
+*.jar
+
+*.jar
+
+bin/dnl.jar
