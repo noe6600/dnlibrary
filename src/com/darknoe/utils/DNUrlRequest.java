@@ -24,7 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-public class UrlRequest {
+public class DNUrlRequest {
 
 	/** 
 	 * Returns string GET response. Headers can be null.

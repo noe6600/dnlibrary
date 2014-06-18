@@ -20,8 +20,8 @@ import org.apache.http.protocol.HTTP;
 
 import android.util.Log;
 
-public class SoapObject {
-	private List<SoapProperty> properties;
+public class DNSoapObject {
+	private List<DNSoapProperty> properties;
 	private String method;
 	private String action;
 	private String webserviceUrl;
@@ -29,8 +29,8 @@ public class SoapObject {
 	private String username;
 	private String password;
 
-	public SoapObject(){
-		this.properties = new ArrayList<SoapProperty>();
+	public DNSoapObject(){
+		this.properties = new ArrayList<DNSoapProperty>();
 		this.method = null;
 		this.action = null;
 		this.webserviceUrl = null;
@@ -38,12 +38,12 @@ public class SoapObject {
 		this.password = null;
 	}
 	
-	public void addProperty(SoapProperty property){
+	public void addProperty(DNSoapProperty property){
 		this.properties.add(property);
 	}
 	
 	public void addProperty(String name, String value){
-		this.properties.add(new SoapProperty(name, value));
+		this.properties.add(new DNSoapProperty(name, value));
 	}
 
 	public String getMethod() {

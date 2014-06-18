@@ -1,12 +1,12 @@
 package com.darknoe.soap;
 
-public class SoapProperty {
+public class DNSoapProperty {
 	private String AttributeName;
 	private String AttributeValue;
 	
-	public SoapProperty(){}
+	public DNSoapProperty(){}
 	
-	public SoapProperty(String AttributeName, String AttributeValue){
+	public DNSoapProperty(String AttributeName, String AttributeValue){
 		this.AttributeName = AttributeName;
 		this.AttributeValue = AttributeValue;
 	}
